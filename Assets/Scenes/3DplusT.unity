@@ -1720,7 +1720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0261ad5da9b17c4ab8662d18ce904c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 2
+  objectType: 1
   maxTimeStamp: 200
   allowZoom: 0
   transparentMat: {fileID: 2100000, guid: bf7ecfda5a82c8741a7ec34b7b209844, type: 2}
@@ -3670,7 +3670,7 @@ MonoBehaviour:
   orthozoomABInteraction: {fileID: 1456757456}
   orthozoomOneHandDepthInteraction: {fileID: 1456757454}
   orthozoomOneHandHeightInteraction: {fileID: 1456757455}
-  orthozoomJoystickControllerDistInteraction: {fileID: 1456757457}
+  orthozoomJoystickControllerDistInteraction: {fileID: 1456757459}
   orthozoomDepthJoystickInteraction: {fileID: 1456757458}
   scrollBarController: {fileID: 1841628503}
   goalNumberCanvas: {fileID: 3288472678159225922}
@@ -4523,6 +4523,7 @@ GameObject:
   - component: {fileID: 1456757456}
   - component: {fileID: 1456757457}
   - component: {fileID: 1456757458}
+  - component: {fileID: 1456757459}
   m_Layer: 0
   m_Name: CDGainInteractionManager
   m_TagString: Untagged
@@ -4571,6 +4572,7 @@ MonoBehaviour:
   - {fileID: 1456757456}
   - {fileID: 1456757457}
   - {fileID: 1456757458}
+  - {fileID: 1456757459}
   objectManager: {fileID: 0}
 --- !u!114 &1456757454
 MonoBehaviour:
@@ -4652,7 +4654,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   primaryButtonGainCoef: 100
-  secondaryButtonGainCoef: 8000
+  secondaryButtonGainCoef: 800
 --- !u!114 &1456757457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4692,7 +4694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDistanceToMove: 0.001
   minGain: 100
-  maxGain: 1200
+  maxGain: 400
   distanceForMaxGain: 0.1
   lambda: 35
   ratio: 0.7
@@ -4704,6 +4706,29 @@ MonoBehaviour:
   controllerDistanceLinePrefab: {fileID: 3813047525365038959, guid: 38739742ea519fe43a6010a4416448b1, type: 3}
   leftControllerTransform: {fileID: 7806668198799067256}
   rightControllerTransform: {fileID: 5335213764619758804}
+--- !u!114 &1456757459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456757451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3150cf991ee6fa943bce4845bec5efed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minDistanceToMove: 0
+  minGain: 100
+  maxGain: 800
+  distanceForMaxGain: 1
+  lambda: 10
+  ratio: 0.3
+  timeIncreaseCoef: 0.002
+  joystickOrthoDistCoef: 0.05
+  rightHand: 1
+  rightJoyStickPos: {fileID: 2087750915789040928, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  leftJoyStickPos: {fileID: 0}
 --- !u!1 &1485604261
 GameObject:
   m_ObjectHideFlags: 0
