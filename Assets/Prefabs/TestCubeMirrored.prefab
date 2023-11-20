@@ -34,7 +34,6 @@ RectTransform:
   m_Children:
   - {fileID: 6033997051409872833}
   m_Father: {fileID: 5993677766480973425}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -58,6 +57,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -153,7 +153,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2367437356333563680}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -285,6 +284,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7503728548535776913}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.426, y: 0.581, z: 1.632}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
@@ -292,7 +292,6 @@ Transform:
   m_Children:
   - {fileID: 2367437356333563680}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &472006402692834479
 MeshFilter:
@@ -378,10 +377,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   simpleInteractable: {fileID: 4680043980622987368}
+  dwellTimeCanvas: {fileID: 0}
+  dwellImage: {fileID: 0}
+  goodSelectImage: {fileID: 0}
+  badSelectImage: {fileID: 0}
   objectSelectedEvent:
     m_PersistentCalls:
       m_Calls: []
-  grabObjectInputAction: {fileID: -5894908955955070786, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  grabObjectInputAction: {fileID: -447654969642097688, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  timeBeforeDwell: 0.5
   renderer_: {fileID: 1289361926659570121}
 --- !u!114 &4680043980622987368
 MonoBehaviour:
@@ -404,6 +408,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
+  m_FocusMode: 1
   m_CustomReticle: {fileID: 0}
   m_AllowGazeInteraction: 1
   m_AllowGazeSelect: 1
@@ -434,6 +439,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_SelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FirstFocusEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastFocusExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FocusEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FocusExited:
     m_PersistentCalls:
       m_Calls: []
   m_Activated:

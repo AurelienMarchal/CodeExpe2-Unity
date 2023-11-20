@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
 public class ExpeBlock
 {
@@ -9,6 +7,8 @@ public class ExpeBlock
     public TI ti { get; set; }
     public Visualization visualization { get; set; }
     public Task task { get; set; }
+
+    public int numberOfObjects { get; set; }
 
     public int trainingTrialNum { get; set; }
 
@@ -23,11 +23,12 @@ public class ExpeBlock
         TI ti_, 
         Visualization visualization_, 
         Task task_,
+        int numberOfObjects_,
         int trainingTrialNum_,
         int monitoredTrialNum_,
         int startingTrial_){
         blockID = blockID_;
-        ti = ti_; visualization = visualization_; task = task_;
+        ti = ti_; visualization = visualization_; task = task_; numberOfObjects = numberOfObjects_;
         trainingTrialNum = trainingTrialNum_;
         monitoredTrialNum = monitoredTrialNum_;
         startingTrial = startingTrial_;
@@ -39,9 +40,19 @@ public class ExpeBlock
         string tiString, 
         string visualizationString,
         string taskString, 
+        string numberOfObjectsString,
         int trainingTrialNum, 
         int monitoredTrialNum,
         int startingTrial){
+
+        var numberOfObjects = 200;
+        try{
+            numberOfObjects = Int32.Parse(numberOfObjectsString);
+        }
+        catch (FormatException)
+        {
+            throw new System.Exception($"Couldn't format numberOfObjects {numberOfObjectsString} in int");
+        }
         var ti = TIMethods.FromString(tiString);
         var visualization = VisualizationMethods.FromString(visualizationString);
         var task = TaskMethods.FromString(taskString);
@@ -50,7 +61,7 @@ public class ExpeBlock
             throw new System.Exception($"{tiString} or {visualizationString} or {taskString} not matching");
         }
 
-        return new ExpeBlock(blockID, ti, visualization, task, trainingTrialNum, monitoredTrialNum, startingTrial);
+        return new ExpeBlock(blockID, ti, visualization, task, numberOfObjects, trainingTrialNum, monitoredTrialNum, startingTrial);
     }
 
     public static ExpeBlock FromBlockChannel(BlockChannel blockChannel){
@@ -60,6 +71,7 @@ public class ExpeBlock
             blockData.@params.TI, 
             blockData.@params.Visualization,
             blockData.@params.Task,
+            blockData.@params.NumberOfObjects,
             blockData.trainingTrialsCount,
             blockData.monitoredTrialsCount,
             blockData.currentTrial);
@@ -84,7 +96,7 @@ public class ExpeBlock
 
 // Parametre Technique d'interaction
 public enum TI{
-    AB, OrthozoomDepthJoystick, OrthozoomDepth, OrthozoomHeight, Slider, OrthozoomJoystickControllerDist, Undifined
+    AB, OrthozoomDepthJoystick, OrthozoomDepth, OrthozoomHeight, OrthozoomJoystickControllerDist, OrthozoomJoystickJoystick, Slider, Undifined
 }
 
 // Parametre Visalisation
@@ -105,6 +117,7 @@ static class TIMethods{
             case "OrthozoomDepth": return TI.OrthozoomDepth;
             case "OrthozoomHeight": return TI.OrthozoomHeight;
             case "OrthozoomJoystickControllerDist": return TI.OrthozoomJoystickControllerDist;
+            case "OrthozoomJoystickJoystick": return TI.OrthozoomJoystickJoystick;
             case "Slider": return TI.Slider;
             default: return TI.Undifined;
         }
@@ -117,6 +130,7 @@ static class TIMethods{
             case TI.OrthozoomDepth: return "OrthozoomDepth";
             case TI.OrthozoomHeight: return "OrthozoomHeight";
             case TI.OrthozoomJoystickControllerDist: return "OrthozoomJoystickControllerDist";
+            case TI.OrthozoomJoystickJoystick: return "OrthozoomJoystickJoystick";
             case TI.Slider: return "Slider";
             default: return "Undifined";
         }

@@ -209,6 +209,9 @@ public class ExpeManager : MonoBehaviour
     Interaction orthozoomJoystickControllerDistInteraction;
 
     [SerializeField]
+    Interaction orthozoomFullJoystickInteraction;
+
+    [SerializeField]
     Interaction orthozoomDepthJoystickInteraction;
 
     [SerializeField]
@@ -757,8 +760,10 @@ public class ExpeManager : MonoBehaviour
     }
 
     void SetupObjectManager(ObjectManager objectManager_){
-        objectManager_.gameObject.SetActive(true);
         objectManager = objectManager_;
+        objectManager_.maxTimeStamp = currentBlock.numberOfObjects;
+        objectManager_.gameObject.SetActive(true);
+        objectManager_.CreateObjects();
         rateControlInteractionManager.objectManager = objectManager_;
         cDGainInteractionManager.objectManager = objectManager_;
         goalNumber.objectManager = objectManager_;
@@ -836,6 +841,15 @@ public class ExpeManager : MonoBehaviour
                     cDGainInteractionManager.interactionStopped.AddListener(OnInteractionStopped);
                     rateControlInteractionManager.interactionStopped.AddListener(OnInteractionStopped);
                     break;
+
+                case TI.OrthozoomJoystickJoystick:
+                    orthozoomFullJoystickInteraction.EnableInteraction(); 
+                    cDGainInteractionManager.interactionStarted.AddListener(OnInteractionStarted);
+                    rateControlInteractionManager.interactionStarted.AddListener(OnInteractionStarted);
+                    cDGainInteractionManager.interactionStopped.AddListener(OnInteractionStopped);
+                    rateControlInteractionManager.interactionStopped.AddListener(OnInteractionStopped);
+                    break;
+
                 case TI.Slider:
                     scrollBarController.scrollbar.interactable = true;
                     scrollBarController.clickedInsideScrollbarHandle.AddListener(OnClickedInsideScrollbarHandle);
@@ -973,7 +987,8 @@ public class ExpeManager : MonoBehaviour
                 case TI.AB:             return (orthozoomABInteraction as OrthozoomButtonCDGainInteraction).controllerDistance;
                 case TI.OrthozoomDepth: return (orthozoomOneHandDepthInteraction as OrthozoomDepthCDGainInteraction).controllerDistance;
                 case TI.OrthozoomHeight: return (orthozoomOneHandHeightInteraction as OrthozoomHeightCDGainInteraction).controllerDistance;
-                case TI.OrthozoomJoystickControllerDist: return (orthozoomJoystickControllerDistInteraction as OrthozoomFullJoystickCDGainInteraction).controllerDistance;
+                case TI.OrthozoomJoystickControllerDist: return (orthozoomJoystickControllerDistInteraction as OrthozoomJoystickControllerDistCDGainInteraction).controllerDistance;
+                case TI.OrthozoomJoystickJoystick: return (orthozoomFullJoystickInteraction as OrthozoomFullJoystickCDGainInteraction).controllerDistance;
                 case TI.OrthozoomDepthJoystick: return (orthozoomDepthJoystickInteraction as OrthozoomDepthJoystickCDGainInteraction).controllerDistance;
                 default: return null;
             }
@@ -986,7 +1001,8 @@ public class ExpeManager : MonoBehaviour
             switch(currentBlock.ti){
                 case TI.OrthozoomDepth: return (orthozoomOneHandDepthInteraction as OrthozoomDepthCDGainInteraction).orthoDistance;
                 case TI.OrthozoomHeight: return (orthozoomOneHandHeightInteraction as OrthozoomHeightCDGainInteraction).orthoDistance;
-                case TI.OrthozoomJoystickControllerDist: return (orthozoomJoystickControllerDistInteraction as OrthozoomFullJoystickCDGainInteraction).orthoDistance;
+                case TI.OrthozoomJoystickControllerDist: return (orthozoomJoystickControllerDistInteraction as OrthozoomJoystickControllerDistCDGainInteraction).orthoDistance;
+                case TI.OrthozoomJoystickJoystick: return (orthozoomFullJoystickInteraction as OrthozoomFullJoystickCDGainInteraction).orthoDistance;
                 case TI.OrthozoomDepthJoystick: return (orthozoomDepthJoystickInteraction as OrthozoomDepthJoystickCDGainInteraction).orthoDistance;
                 default: return null;
             }
@@ -1000,7 +1016,8 @@ public class ExpeManager : MonoBehaviour
                 case TI.AB:             return (orthozoomABInteraction as OrthozoomButtonCDGainInteraction).cDGain;
                 case TI.OrthozoomDepth: return (orthozoomOneHandDepthInteraction as OrthozoomDepthCDGainInteraction).cDGain;
                 case TI.OrthozoomHeight: return (orthozoomOneHandHeightInteraction as OrthozoomHeightCDGainInteraction).cDGain;
-                case TI.OrthozoomJoystickControllerDist: return (orthozoomJoystickControllerDistInteraction as OrthozoomFullJoystickCDGainInteraction).cDGain;
+                case TI.OrthozoomJoystickControllerDist: return (orthozoomJoystickControllerDistInteraction as OrthozoomJoystickControllerDistCDGainInteraction).cDGain;
+                case TI.OrthozoomJoystickJoystick: return (orthozoomFullJoystickInteraction as OrthozoomFullJoystickCDGainInteraction).cDGain;
                 case TI.OrthozoomDepthJoystick: return (orthozoomDepthJoystickInteraction as OrthozoomDepthJoystickCDGainInteraction).cDGain;
                 default: return null;
             }

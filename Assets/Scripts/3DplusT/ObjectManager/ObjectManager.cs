@@ -24,9 +24,17 @@ public class ObjectManager : MonoBehaviour
                 HandleActivatedObjectsPosition();
                 HandleActivatedObjectsRotation();
                 HandleActivatedObjectsSize();
+                //Debug.Log($"Set t = {t}");
             }
         }
     }
+
+    [SerializeField]
+    [Range(0f, 1f)]
+    float ajustableZoom;
+
+    [SerializeField]
+    bool allowAjustableZoom = false;
 
     private float zoom_ = 0f;
 
@@ -41,6 +49,7 @@ public class ObjectManager : MonoBehaviour
                 HandleActivatedObjectsPosition();
                 HandleActivatedObjectsRotation();
                 HandleActivatedObjectsSize();
+                //Debug.Log($"Zoom {zoom}");
             }
             
         }
@@ -71,6 +80,12 @@ public class ObjectManager : MonoBehaviour
 
     [Range(0.0f, 1.0f), SerializeField]
     protected float flagRatio = 0.1f;
+
+    [SerializeField]
+    protected int[] flagSpacings;
+
+    [SerializeField]
+    protected int[] zoomThresholdsForFlagSpacings;
 
     protected int lastT = 0;
 
@@ -126,6 +141,8 @@ public class ObjectManager : MonoBehaviour
 
     protected List<GameObject> objectList;
 
+    protected List<GameObject> completeObjectList;
+
     public IntBoolBoolIntEvent objectSelectedEvent = new IntBoolBoolIntEvent();
 
     protected Quaternion lastRightControllerRotation = Quaternion.identity;
@@ -143,16 +160,39 @@ public class ObjectManager : MonoBehaviour
         selectionRectangleCanvasPrefabInstance = Instantiate(selectionRectangleCanvasPrefab, transform);
         selectionRectangleCanvasPrefabInstance.SetActive(false);
         CreateObjects();
+        t = 0;
     }
 
-    protected void CreateObjects(){
+    void Update(){
+        if(allowAjustableZoom){
+            zoom = ajustableZoom * maxTimeStamp;
+        }
+    }
+
+    void DestroyAllObjects(){
+
+        objectList?.Clear();
+        completeObjectList?.Clear();
+        flags_?.Clear();
+
+        for (int i = 0; i < transform.childCount; i++){
+            if(transform.GetChild(i).gameObject != selectionRectangleCanvasPrefabInstance){
+                Destroy(transform.GetChild(i).gameObject);
+            }
+        }
+    }
+
+    public void CreateObjects(){
 
         SetupListeners();
         objectList = new List<GameObject>();
+        completeObjectList = new List<GameObject>();
 
         if(generateFlags){
             flags_ = new List<GameObject>();
         }
+
+        DestroyAllObjects();
 
         switch(objectType){
             case ObjectType.Cube: CreateCubes(); break;
@@ -167,7 +207,6 @@ public class ObjectManager : MonoBehaviour
 
         lastCubeRotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         
-        objectList = new List<GameObject>();
         for(int i = 0; i <= maxTimeStamp; i++){
 
             var cube = Instantiate(cubePrefab, Vector3.zero, Quaternion.identity);
@@ -178,7 +217,7 @@ public class ObjectManager : MonoBehaviour
             holder.transform.SetParent(transform, false);
             cube.transform.SetParent(holder.transform, false);
 
-            objectList.Add(cube);
+            completeObjectList.Add(cube);
             ObjectDataCube objectData = cube.GetComponent<ObjectDataCube>();
             
             if(objectData != null){
@@ -231,7 +270,7 @@ public class ObjectManager : MonoBehaviour
             holder.transform.SetParent(transform, false);
             sphereCell.transform.SetParent(holder.transform, false);
 
-            objectList.Add(sphereCell);
+            completeObjectList.Add(sphereCell);
             ObjectDataSphereCell objectData = sphereCell.GetComponent<ObjectDataSphereCell>();
             
             if(objectData != null){
@@ -284,7 +323,7 @@ public class ObjectManager : MonoBehaviour
 
             cell.transform.localScale = new Vector3(cellScale, cellScale, cellScale);
             //canvas.transform.localScale = new Vector3(0.01f/cellScale, 0.01f/cellScale, 1f/cellScale);
-            objectList.Add(cell);
+            completeObjectList.Add(cell);
         }
     }
 
@@ -355,16 +394,39 @@ public class ObjectManager : MonoBehaviour
     }
 
     protected virtual void HandleFlagActivation(){
-        if(generateFlags){
+        if(generateFlags && flagSpacings.Length > 0 && zoomThresholdsForFlagSpacings.Length == flagSpacings.Length){
+            var flagSpacingsIndex = FindClosestGreaterIndex(zoomThresholdsForFlagSpacings, Mathf.FloorToInt(zoom));
+            flagSpacingsIndex = Math.Clamp(flagSpacingsIndex, 0, flagSpacings.Length - 1);
             foreach(GameObject obj in objectList){
                 ObjectData objectData = obj.GetComponent<ObjectData>();
                 foreach(Transform tr in obj.transform.parent){
                     if(tr.tag == "Flag"){
-                        tr.gameObject.SetActive(objectData.number % Mathf.RoundToInt(maxTimeStamp*flagRatio)==0);
+                        tr.gameObject.SetActive(objectData.number % Mathf.RoundToInt(flagSpacings[flagSpacingsIndex])==0);
+                        //tr.gameObject.SetActive(objectData.number % Mathf.RoundToInt(maxTimeStamp*flagRatio)==0);
+                        //Debug.Log($"Flag Ratio {flagRatios[flagSpacingsIndex]}");
                     }
                 }
             }
         }
+    }
+
+    protected static int FindClosestGreaterIndex(int[] numbers, int target)
+    {
+        int closestIndex = -1;
+        int minDifference = int.MaxValue;
+
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            int difference = target - numbers[i];
+
+            if (difference > 0 && difference < minDifference)
+            {
+                minDifference = difference;
+                closestIndex = i;
+            }
+        }
+
+        return closestIndex;
     }
 
     public int PickRandomPos(int leftMargin = 0, int rightMargin = 0){
@@ -390,7 +452,10 @@ public class ObjectManager : MonoBehaviour
         if(objectType != ObjectType.SphereCell){
             return;
         }
-        foreach(GameObject obj in objectList){
+        if(completeObjectList == null){
+            return;
+        }
+        foreach(GameObject obj in completeObjectList){
             ObjectDataSphereCell objectData = obj.GetComponent<ObjectDataSphereCell>();
             objectData.colSphere1 = SphereCellColorsMethods.RandomSphereCellColor();
             objectData.colSphere2 = SphereCellColorsMethods.RandomSphereCellColor();
@@ -443,7 +508,7 @@ public class ObjectManager : MonoBehaviour
             var stop1 = Math.Min(randomNb + patternSize/2 + minSpacingBetweenPatterns, maxTimeStamp);
 
             for(var i = start1; i < stop1; i++){
-                var objectData = objectList[i].GetComponent<ObjectDataSphereCell>();
+                var objectData = (ObjectDataSphereCell)GetObjectDataAtIndex(i);
 
                 if(objectData != null){
                     if(objectData.isGoal){
@@ -456,7 +521,7 @@ public class ObjectManager : MonoBehaviour
                 var start2 = Math.Max(randomNb - patternSize/2, 0);
                 var stop2 = Math.Min(randomNb + patternSize/2, maxTimeStamp - 1);
                 for(var i = start2; i <= stop2; i++){
-                    var objectData = objectList[i].GetComponent<ObjectDataSphereCell>();
+                    var objectData = (ObjectDataSphereCell)GetObjectDataAtIndex(i);
 
                     if(objectData != null){
                         objectData.isGoal = true;
@@ -593,22 +658,29 @@ public class ObjectManager : MonoBehaviour
     public bool ValidateObject(int num, bool propagate = false){
         if(objectList != null){
 
-            if(objectList[num].GetComponent<ObjectData>().validated){
+            var objectData = GetObjectDataAtIndex(num);
+
+            if(objectData == null){
+                return false;
+            }
+
+            if(objectData.validated){
                 return true;
             }
 
-            if(objectList[num].GetComponent<ObjectData>().isGoal){
-                objectList[num].GetComponent<ObjectData>().validated = true;
+            if(objectData.isGoal){
+                objectData.validated = true;
 
                 if(propagate){
                     var currentIndex = num - 1;
 
                     while(currentIndex > 0){
-                        if(objectList[currentIndex].GetComponent<ObjectData>() == null){
+                        var objectDataCurrentIndex = GetObjectDataAtIndex(currentIndex);
+                        if(objectDataCurrentIndex == null){
                             break;
                         }
-                        if(!objectList[currentIndex].GetComponent<ObjectData>().validated && objectList[currentIndex].GetComponent<ObjectData>().isGoal){
-                            objectList[currentIndex].GetComponent<ObjectData>().validated = true;
+                        if(!objectDataCurrentIndex.validated && objectDataCurrentIndex.isGoal){
+                            objectDataCurrentIndex.validated = true;
                         }
                         else{
                             break;
@@ -621,11 +693,12 @@ public class ObjectManager : MonoBehaviour
                     currentIndex = num + 1;
 
                     while(currentIndex < maxTimeStamp){
-                        if(objectList[currentIndex].GetComponent<ObjectData>() == null){
+                        var objectDataCurrentIndex = GetObjectDataAtIndex(currentIndex);
+                        if(objectDataCurrentIndex == null){
                             break;
                         }
-                        if(!objectList[currentIndex].GetComponent<ObjectData>().validated && objectList[currentIndex].GetComponent<ObjectData>().isGoal){
-                            objectList[currentIndex].GetComponent<ObjectData>().validated = true;
+                        if(!objectDataCurrentIndex.validated && objectDataCurrentIndex.isGoal){
+                            objectDataCurrentIndex.validated = true;
                         }
                         else{
                             break;
@@ -642,14 +715,14 @@ public class ObjectManager : MonoBehaviour
 
     public ObjectData GetObjectDataAtIndex(int i){
         if(objectList != null){
-            return objectList[i].GetComponent<ObjectData>();
+            return completeObjectList[i].GetComponent<ObjectData>();
         }
         return null;
     }
 
     public void ResetAllIsGoal(){
-        if(objectList != null){
-            foreach(GameObject obj in objectList){
+        if(completeObjectList != null){
+            foreach(GameObject obj in completeObjectList){
                 var objectData = obj.GetComponent<ObjectData>();
                 if(objectData != null){
                     objectData.isGoal = false;
@@ -659,8 +732,8 @@ public class ObjectManager : MonoBehaviour
     }
 
     public void ResetAllValidated(){
-        if(objectList != null){
-            foreach(GameObject obj in objectList){
+        if(completeObjectList != null){
+            foreach(GameObject obj in completeObjectList){
                 var objectData = obj.GetComponent<ObjectData>();
                 if(objectData != null){
                     objectData.validated = false;
@@ -670,8 +743,8 @@ public class ObjectManager : MonoBehaviour
     }
 
     public void ResetAllPatternPos(){
-        if(objectList != null){
-            foreach(GameObject obj in objectList){
+        if(completeObjectList != null){
+            foreach(GameObject obj in completeObjectList){
                 var objectData = obj.GetComponent<ObjectData>();
                 if(objectData != null){
                     objectData.patternPos = objectData.number;

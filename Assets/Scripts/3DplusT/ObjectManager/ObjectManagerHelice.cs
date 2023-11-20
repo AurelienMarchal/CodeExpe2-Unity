@@ -13,7 +13,7 @@ public class ObjectManagerHelice : ObjectManager
     float heightIncrement;
 
     protected override void HandleActivation(){
-        foreach(GameObject obj in objectList){
+        foreach(GameObject obj in completeObjectList){
             ObjectData objectData = obj.GetComponent<ObjectData>();
             if (objectData.number >= t - numberOfObjectDisplayed/2 && objectData.number <= t + numberOfObjectDisplayed/2){
                 if(objectType == ObjectType.Cell){
@@ -21,6 +21,10 @@ public class ObjectManagerHelice : ObjectManager
                 }
                 else{
                     obj.transform.parent.gameObject.SetActive(true);
+                }
+
+                if(!objectList.Contains(obj)){
+                    objectList.Add(obj);
                 }
             }
 
@@ -30,6 +34,9 @@ public class ObjectManagerHelice : ObjectManager
                 }
                 else{
                     obj.transform.parent.gameObject.SetActive(false);
+                }
+                if(objectList.Contains(obj)){
+                    objectList.Remove(obj);
                 }
             }
         }

@@ -11,9 +11,13 @@ public class CDGainInteractionManager : InteractionManager
                 {
                     if(cDGainInteraction.interationEnabled){
                         
+                        cDGainInteraction.numberOfObjects = objectManager.maxTimeStamp;
                         var timeIncrease = cDGainInteraction.CalculateTimeIncrease();
+
+                        if(timeIncrease != 0){
+                            objectManager.t -= timeIncrease;
+                        }
                         
-                        objectManager.t -= timeIncrease;
                         var percentageOfMaxGain = 0f;
                         if(cDGainInteraction is OrthozoomButtonCDGainInteraction){
                             var ortozoomButtonCDGainInteraction = cDGainInteraction as OrthozoomButtonCDGainInteraction;
@@ -31,7 +35,7 @@ public class CDGainInteractionManager : InteractionManager
                             }
                         }
                         else{
-                            percentageOfMaxGain = (cDGainInteraction.cDGain - cDGainInteraction.minGain)/(cDGainInteraction.maxGain - cDGainInteraction.minGain);
+                            percentageOfMaxGain = (cDGainInteraction.cDGain - cDGainInteraction.minGain)/(cDGainInteraction.maxGain + cDGainInteraction.maxGain2 - cDGainInteraction.minGain);
                         }
 
                         

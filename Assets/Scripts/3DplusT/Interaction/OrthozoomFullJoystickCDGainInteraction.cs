@@ -50,7 +50,6 @@ public class OrthozoomFullJoystickCDGainInteraction : CDGainInteraction
     {
         orthoDistance = 0f;
         controllerDistance = 0f;
-        //lol
     }
 
     public override int CalculateTimeIncrease(){

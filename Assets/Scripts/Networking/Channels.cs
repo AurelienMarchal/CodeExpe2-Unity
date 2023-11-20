@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
 public class Connect_
 {
     public int id { get; set; }
@@ -49,6 +44,7 @@ public class Params_
     public string TI { get; set; }
     public string Visualization { get; set; }
     public string Task { get; set; }
+    public string NumberOfObjects{ get; set; }
 }
 
 public class BlockChannel

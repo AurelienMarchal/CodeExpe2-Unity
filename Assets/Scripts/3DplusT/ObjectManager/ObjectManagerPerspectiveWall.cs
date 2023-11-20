@@ -15,25 +15,35 @@ public class ObjectManagerPerspectiveWall : ObjectManager
     float wallAngle;
 
     protected override void HandleActivation(){
-        foreach(GameObject obj in objectList){
+        foreach(GameObject obj in completeObjectList){
             ObjectData objectData = obj.GetComponent<ObjectData>();
             if (objectData.number >= t - numberOfObjectDisplayed/2 && objectData.number <= t + numberOfObjectDisplayed/2){
+                //Debug.Log($"Activate obj {objectData.number}");
                 if(objectType == ObjectType.Cell){
                     obj.transform.parent.parent.gameObject.SetActive(true);
                 }
                 else{
                     obj.transform.parent.gameObject.SetActive(true);
                 }
+                if(!objectList.Contains(obj)){
+                    objectList.Add(obj);
+                }
             }
             else if (obj.activeSelf){
+                //Debug.Log($"Deactivate obj {objectData.number}");
                 if(objectType == ObjectType.Cell){
                     obj.transform.parent.parent.gameObject.SetActive(false);
                 }
                 else{
                     obj.transform.parent.gameObject.SetActive(false);
                 }
+                if(objectList.Contains(obj)){
+                    objectList.Remove(obj);
+                }
             }
         }
+
+        //Debug.Log($"objectList size : {objectList.Count}");
     }
 
     protected override void HandleActivatedObjectsPosition(){
@@ -195,16 +205,22 @@ public class ObjectManagerPerspectiveWall : ObjectManager
                         Mathf.FloorToInt(distanceOfDisplayInFront/gap));
                 }
             }
-
-            foreach(GameObject obj in objectList){
-                ObjectData objectData = obj.GetComponent<ObjectData>();
-                foreach(Transform tr in obj.transform.parent){
-                    if(tr.tag == "Flag"){
-                        //tr.gameObject.SetActive(objectData.number % (numberOfObjectDisplayedOnTheFront/5 * 10)==0);
-                        tr.gameObject.SetActive(objectData.number % Mathf.RoundToInt(maxTimeStamp*flagRatio)==0);
+            if(flagSpacings.Length > 0){
+                var flagSpacingsIndex = FindClosestGreaterIndex(zoomThresholdsForFlagSpacings, Mathf.FloorToInt(zoom));
+                flagSpacingsIndex = Math.Clamp(flagSpacingsIndex, 0, flagSpacings.Length - 1);
+                foreach(GameObject obj in objectList){
+                    ObjectData objectData = obj.GetComponent<ObjectData>();
+                    foreach(Transform tr in obj.transform.parent){
+                        if(tr.tag == "Flag"){
+                            //Debug.Log($"Flag Ratio {flagSpacings[flagSpacingsIndex]}");
+                            tr.gameObject.SetActive(objectData.number % Mathf.CeilToInt(flagSpacings[flagSpacingsIndex])==0);
+                            //tr.gameObject.SetActive(objectData.number % (numberOfObjectDisplayedOnTheFront/5 * 10)==0);
+                            //tr.gameObject.SetActive(objectData.number % Mathf.RoundToInt(maxTimeStamp*flagRatio)==0);
+                        }
                     }
                 }
             }
+            
         }
     }
 }
