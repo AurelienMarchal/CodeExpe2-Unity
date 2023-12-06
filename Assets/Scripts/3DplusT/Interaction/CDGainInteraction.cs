@@ -1,8 +1,39 @@
 using UnityEngine;
+using System;
+
+[Serializable]
+public struct Parameter{
+    [SerializeField]
+    public int numberOfObjectsRequired;
+
+    [SerializeField]
+    public float minGain;
+
+    [SerializeField]
+    public float maxGain;
+
+    [SerializeField]
+    public float lambda;
+
+    [Range(0.0f, 1.0f), SerializeField]
+    public float ratio;
+
+    public Parameter(int numberOfObjectsRequired, float minGain, float maxGain, float lambda, float ratio){
+        this.numberOfObjectsRequired = numberOfObjectsRequired;
+        this.minGain = minGain;
+        this.maxGain = maxGain;
+        this.lambda = lambda;
+        this.ratio = Mathf.Clamp(ratio, 0f, 1f);
+    }
+
+}
 
 
 public class CDGainInteraction : Interaction
 {
+
+    [SerializeField]
+    Parameter[] parameters;
 
     [HideInInspector]
     public float numberOfObjects;
@@ -16,22 +47,14 @@ public class CDGainInteraction : Interaction
     [SerializeField]
     public float maxGain;
 
-    public float maxGain2;
-
     [SerializeField]
     float distanceForMaxGain;
 
     [SerializeField]
     float lambda;
 
-    [SerializeField]
-    float lambda2;
-
     [Range(0.0f, 1.0f), SerializeField]
     float ratio = 0.5f;
-
-    [Range(0.0f, 1.0f), SerializeField]
-    float ratio2 = 0.5f;
 
     
     public float cDGain{
@@ -45,25 +68,26 @@ public class CDGainInteraction : Interaction
 
 
     protected float CalculateCDGain(float distance){
-        var CD_min = minGain;
-        var CD_max = maxGain;
+
+        var parameter = new Parameter(int.MaxValue, 0f, 0f, 0f, 0f);
+
+        foreach(Parameter parameter_ in parameters){
+            if(parameter_.numberOfObjectsRequired >= numberOfObjects){
+                parameter = parameter_;
+                break;
+            }
+        }
+
+
+        var CD_min = parameter.minGain;
+        var CD_max = parameter.maxGain;
         var Vmin = 0f;
         var Vmax = distanceForMaxGain;
 
-        var Vinf = (Vmax - Vmin) * ratio + Vmin;
-        var gain = (CD_max - CD_min) / (1 + Mathf.Exp(-lambda * (distance - Vinf))) + CD_min;
+        var Vinf = (Vmax - Vmin) * parameter.ratio + Vmin;
+        var gain = (CD_max - CD_min) / (1 + Mathf.Exp(-parameter.lambda * (distance - Vinf))) + CD_min;
 
-        var CD_min2 = 0f;
-        maxGain2 = (numberOfObjects-200) * CD_max/800;
-        var CD_max2 = maxGain2;
-
-        var Vinf2 = (Vmax - Vmin) * ratio2 + Vmin;
-        var gain2 = (CD_max2 - CD_min2) / (1 + Mathf.Exp(-lambda2 * (distance - Vinf2))) + CD_min2;
-
-        //Debug.Log($"Gain : {gain + gain2}");
-
-        return gain + gain2;
+        return gain;
     }
-
 
 }

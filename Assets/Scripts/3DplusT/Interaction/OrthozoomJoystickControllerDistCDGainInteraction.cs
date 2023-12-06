@@ -63,7 +63,7 @@ public class OrthozoomJoystickControllerDistCDGainInteraction : CDGainInteractio
 
             lineRendererRight = controllerDistanceLineInstanceRight.GetComponent<LineRenderer>();
             rateTextMeshRight = controllerDistanceLineInstanceRight.GetComponentInChildren<TextMeshProUGUI>();
-            lineRendererRight.enabled = true;
+            lineRendererRight.enabled = false;
         }
         else{
             leftEnabledPos = leftControllerTransform.position;
@@ -71,7 +71,7 @@ public class OrthozoomJoystickControllerDistCDGainInteraction : CDGainInteractio
 
             lineRendererLeft = controllerDistanceLineInstanceLeft.GetComponent<LineRenderer>();
             rateTextMeshLeft = controllerDistanceLineInstanceLeft.GetComponentInChildren<TextMeshProUGUI>();
-            lineRendererLeft.enabled = true;
+            lineRendererLeft.enabled = false;
         }
 
         resetStartingPosInteraction.action.performed += ResetEnabledPos;

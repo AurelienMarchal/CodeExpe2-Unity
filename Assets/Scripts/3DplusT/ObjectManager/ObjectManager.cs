@@ -15,9 +15,10 @@ public class ObjectManager : MonoBehaviour
     public int t{
         get{return t_;}
         set{
+            var oldT = t_;
             t_ = Math.Clamp(value, 0, maxTimeStamp - 1);
             if(objectList != null){
-                HandleActivation();
+                HandleActivation((t_ - oldT) * 2);
                 HandleCanBeSelected();
                 HandleSelectionRectangle();
                 HandleFlagActivation();
@@ -358,7 +359,7 @@ public class ObjectManager : MonoBehaviour
         last_3DManipulationEnabled = _3DManipulationEnabled;
     }
 
-    protected virtual void HandleActivation(){
+    protected virtual void HandleActivation(int increase){
 
     }
 

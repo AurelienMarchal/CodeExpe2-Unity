@@ -35,9 +35,8 @@ public class CDGainInteractionManager : InteractionManager
                             }
                         }
                         else{
-                            percentageOfMaxGain = (cDGainInteraction.cDGain - cDGainInteraction.minGain)/(cDGainInteraction.maxGain + cDGainInteraction.maxGain2 - cDGainInteraction.minGain);
+                            percentageOfMaxGain = (cDGainInteraction.cDGain - cDGainInteraction.minGain)/(cDGainInteraction.maxGain - cDGainInteraction.minGain);
                         }
-
                         
                         objectManager.zoom = percentageOfMaxGain * objectManager.maxTimeStamp * zoomRatio;
                     }

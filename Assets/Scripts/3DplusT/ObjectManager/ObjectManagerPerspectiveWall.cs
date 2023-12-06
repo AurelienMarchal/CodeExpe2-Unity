@@ -2,8 +2,7 @@
 using System;
 using UnityEngine;
 
-public class ObjectManagerPerspectiveWall : ObjectManager
-{
+public class ObjectManagerPerspectiveWall : ObjectManager{
 
     [SerializeField]
     int numberOfObjectDisplayed;
@@ -14,7 +13,47 @@ public class ObjectManagerPerspectiveWall : ObjectManager
     [Range(0, Mathf.PI/2), SerializeField]
     float wallAngle;
 
-    protected override void HandleActivation(){
+    protected override void HandleActivation(int increase){
+        //Debug.Log($"var i = {Math.Max(t - Math.Abs(increase) - numberOfObjectDisplayed/2, 0)}; i < {Math.Min(t + Math.Abs(increase) + numberOfObjectDisplayed/2, completeObjectList.Count)}; i++");
+        objectList.Clear();
+        for(var i = Math.Max(t - Math.Abs(increase) - numberOfObjectDisplayed/2, 0); i < Math.Min(t + Math.Abs(increase) + numberOfObjectDisplayed/2, completeObjectList.Count); i++){
+            //Debug.Log($"i = {i}");
+            var obj = completeObjectList[i]; 
+            ObjectData objectData = obj.GetComponent<ObjectData>();
+            if (objectData.number >= t - numberOfObjectDisplayed/2 && objectData.number <= t + numberOfObjectDisplayed/2){
+                //Debug.Log($"Activate obj {objectData.number}");
+                if(objectType == ObjectType.Cell){
+                    obj.transform.parent.parent.gameObject.SetActive(true);
+                }
+                else{
+                    obj.transform.parent.gameObject.SetActive(true);
+                }
+                if(!objectList.Contains(obj)){
+                    objectList.Add(obj);
+                }
+            }
+            else if (obj.activeSelf){
+                //Debug.Log($"Deactivate obj {objectData.number}");
+                if(objectType == ObjectType.Cell){
+                    obj.transform.parent.parent.gameObject.SetActive(false);
+                }
+                else{
+                    obj.transform.parent.gameObject.SetActive(false);
+                }
+                /*
+                if(objectList.Contains(obj)){
+                    objectList.Remove(obj);
+                }
+                */
+            }
+            
+        }
+
+        //Debug.Log($"objectList.Count : {objectList.Count}");
+        //Debug.Log($"completeObjectList.Count : {completeObjectList.Count}");
+        
+
+        /*
         foreach(GameObject obj in completeObjectList){
             ObjectData objectData = obj.GetComponent<ObjectData>();
             if (objectData.number >= t - numberOfObjectDisplayed/2 && objectData.number <= t + numberOfObjectDisplayed/2){
@@ -42,6 +81,7 @@ public class ObjectManagerPerspectiveWall : ObjectManager
                 }
             }
         }
+        */
 
         //Debug.Log($"objectList size : {objectList.Count}");
     }

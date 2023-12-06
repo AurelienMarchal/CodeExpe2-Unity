@@ -12,7 +12,7 @@ public class ObjectManagerHelice : ObjectManager
     [SerializeField]
     float heightIncrement;
 
-    protected override void HandleActivation(){
+    protected override void HandleActivation(int increase){
         foreach(GameObject obj in completeObjectList){
             ObjectData objectData = obj.GetComponent<ObjectData>();
             if (objectData.number >= t - numberOfObjectDisplayed/2 && objectData.number <= t + numberOfObjectDisplayed/2){

@@ -8,7 +8,7 @@ public class ObjectManagerLogCircle : ObjectManager
     [Range(2, 10), SerializeField]
     int logBase;
 
-    protected override void HandleActivation(){
+    protected override void HandleActivation(int increase){
         foreach(GameObject obj in objectList){
             ObjectData objectData = obj.GetComponent<ObjectData>();
             var relativeInd = objectData.number - t;

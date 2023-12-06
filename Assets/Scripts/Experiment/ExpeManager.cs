@@ -761,9 +761,12 @@ public class ExpeManager : MonoBehaviour
 
     void SetupObjectManager(ObjectManager objectManager_){
         objectManager = objectManager_;
+        var lastMaxTimeStamp = objectManager_.maxTimeStamp;
         objectManager_.maxTimeStamp = currentBlock.numberOfObjects;
         objectManager_.gameObject.SetActive(true);
-        objectManager_.CreateObjects();
+        if(lastMaxTimeStamp != objectManager_.maxTimeStamp){
+            objectManager_.CreateObjects();
+        }
         rateControlInteractionManager.objectManager = objectManager_;
         cDGainInteractionManager.objectManager = objectManager_;
         goalNumber.objectManager = objectManager_;
@@ -1246,7 +1249,7 @@ Number Of Pattern:
 CurrentTime: 
 {currentTime}
 CurrentZoom:
-{currentZoom}
+{objectManager.zoom}
 CurrentControllerDistance
 {currentControllerDistance}
 CurrentCDGain
@@ -1288,7 +1291,7 @@ Current Direction:
 CurrentTime:
 {currentTime}
 CurrentZoom:
-{currentZoom}
+{objectManager.zoom}
 CurrentControllerDistance
 {currentControllerDistance}
 CurrentCDGain
