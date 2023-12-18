@@ -2,7 +2,8 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public struct Parameter{
+public struct CDGainParameter{
+    
     [SerializeField]
     public int numberOfObjectsRequired;
 
@@ -18,7 +19,7 @@ public struct Parameter{
     [Range(0.0f, 1.0f), SerializeField]
     public float ratio;
 
-    public Parameter(int numberOfObjectsRequired, float minGain, float maxGain, float lambda, float ratio){
+    public CDGainParameter(int numberOfObjectsRequired, float minGain, float maxGain, float lambda, float ratio){
         this.numberOfObjectsRequired = numberOfObjectsRequired;
         this.minGain = minGain;
         this.maxGain = maxGain;
@@ -33,7 +34,7 @@ public class CDGainInteraction : Interaction
 {
 
     [SerializeField]
-    Parameter[] parameters;
+    CDGainParameter[] parameters;
 
     [HideInInspector]
     public float numberOfObjects;
@@ -41,20 +42,14 @@ public class CDGainInteraction : Interaction
     [SerializeField]
     protected float minDistanceToMove;
 
-    [SerializeField]
-    public float minGain = 0f;
-
-    [SerializeField]
+    [HideInInspector]
     public float maxGain;
+
+    [HideInInspector]
+    public float minGain;
 
     [SerializeField]
     float distanceForMaxGain;
-
-    [SerializeField]
-    float lambda;
-
-    [Range(0.0f, 1.0f), SerializeField]
-    float ratio = 0.5f;
 
     
     public float cDGain{
@@ -69,18 +64,19 @@ public class CDGainInteraction : Interaction
 
     protected float CalculateCDGain(float distance){
 
-        var parameter = new Parameter(int.MaxValue, 0f, 0f, 0f, 0f);
+        var parameter = new CDGainParameter(int.MaxValue, 1f, 1f, 1f, 1f);
 
-        foreach(Parameter parameter_ in parameters){
+        foreach(CDGainParameter parameter_ in parameters){
             if(parameter_.numberOfObjectsRequired >= numberOfObjects){
                 parameter = parameter_;
                 break;
             }
         }
 
-
+        minGain = parameter.minGain;
+        maxGain = parameter.maxGain;
         var CD_min = parameter.minGain;
-        var CD_max = parameter.maxGain;
+        var CD_max = maxGain;
         var Vmin = 0f;
         var Vmax = distanceForMaxGain;
 

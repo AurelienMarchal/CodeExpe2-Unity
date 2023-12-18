@@ -11,7 +11,8 @@ public class ResumeLogger
         "ti;" + 
         "task;" + 
         "trial_number;" + 
-        "is_training;" + 
+        "is_training;" +
+        "number_of_object;" +
         "start_pos;" + 
         "target_pos;" + 
         "distance;" + 
@@ -128,6 +129,7 @@ public class ResumeLogger
 
         int trial_number,
         bool is_training,
+        int number_of_object,
         int start_pos,
         int? target_pos,
         int? distance,
@@ -215,6 +217,7 @@ public class ResumeLogger
             $"{task};" + 
             $"{trial_number};" + 
             $"{is_training};" + 
+            $"{number_of_object};" +
             $"{start_pos};" + 
             $"{target_pos};" + 
             $"{distance};" + 

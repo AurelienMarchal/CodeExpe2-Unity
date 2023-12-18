@@ -18,6 +18,13 @@ public class OrthozoomFullJoystickCDGainInteraction : CDGainInteraction
     [SerializeField]
     InputActionReference leftJoyStickPos;
 
+    [SerializeField]
+    float joystickXDeadZone;
+
+    [SerializeField]
+    float joystickYDeadZoneActivation;
+
+
     float distanceSinceLastTimeIncrease = 0f;
 
     public float joystickX{
@@ -64,6 +71,12 @@ public class OrthozoomFullJoystickCDGainInteraction : CDGainInteraction
         else{
             joystickX = leftJoyStickPos.action.ReadValue<Vector2>().x;
             joystickY = leftJoyStickPos.action.ReadValue<Vector2>().y;
+        }
+
+        if(Mathf.Abs(joystickY) > joystickYDeadZoneActivation && orthoDistance < 0.95f){
+            if(Mathf.Abs(joystickX) < joystickXDeadZone){
+                joystickX = 0f;
+            }
         }
 
         orthoDistance = Mathf.Clamp01(orthoDistance + joystickY*joystickOrthoDistCoef);

@@ -3918,7 +3918,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45fe2060c6fd8f428f3a87c6fdbfe8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distances: 160000002c0000004200000058000000
+  locateTaskParameters:
+  - numberOfObjectsRequired: 200
+    distances: 160000002c0000004200000058000000
+  - numberOfObjectsRequired: 5000
+    distances: 260200004c0400007206000098080000
+  - numberOfObjectsRequired: 10000
+    distances: 4c04000098080000e40c000030110000
   rangeToSelectObject: 2
   patternSize: 3
   minSpacingBetweenPatterns: 15
@@ -4862,18 +4868,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters:
-  - numberOfObjectsRequired: 0
-    minGain: 0
-    maxGain: 0
-    lambda: 0
-    ratio: 0
+  - numberOfObjectsRequired: 200
+    minGain: 100
+    maxGain: 800
+    lambda: 35
+    ratio: 0.7
   numberOfObjects: 0
   minDistanceToMove: 0.0002
-  minGain: 100
   maxGain: 800
+  minGain: 100
   distanceForMaxGain: 0.1
-  lambda: 35
-  ratio: 0.7
   rightHand: 1
   resetStartingPosInteraction: {fileID: -2056001751301574692, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   controllerDistanceLinePrefab: {fileID: 3813047525365038959, guid: 38739742ea519fe43a6010a4416448b1, type: 3}
@@ -4891,14 +4895,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c83bc549b9d49d46929da8dad52075c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters: []
+  parameters:
+  - numberOfObjectsRequired: 200
+    minGain: 100
+    maxGain: 800
+    lambda: 35
+    ratio: 0.7
   numberOfObjects: 0
   minDistanceToMove: 0.0002
-  minGain: 100
   maxGain: 800
+  minGain: 100
   distanceForMaxGain: 0.1
-  lambda: 35
-  ratio: 0.7
   rightHand: 1
   resetStartingPosInteraction: {fileID: -2056001751301574692, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   controllerDistanceLinePrefab: {fileID: 3813047525365038959, guid: 38739742ea519fe43a6010a4416448b1, type: 3}
@@ -4916,14 +4923,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9244478363c13874eb1ea910eb73a02d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters: []
+  parameters:
+  - numberOfObjectsRequired: 0
+    minGain: 400
+    maxGain: 1200
+    lambda: 0
+    ratio: 0
   numberOfObjects: 0
   minDistanceToMove: 0.0002
-  minGain: 400
   maxGain: 1200
+  minGain: 400
   distanceForMaxGain: 0
-  lambda: 0
-  ratio: 0.5
   rightHand: 1
   controllerDistanceLinePrefab: {fileID: 3813047525365038959, guid: 38739742ea519fe43a6010a4416448b1, type: 3}
   leftControllerTransform: {fileID: 7806668198799067256}
@@ -4953,14 +4963,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b6aa38e69cfb449b3cac0035c6a54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters: []
+  parameters:
+  - numberOfObjectsRequired: 200
+    minGain: 100
+    maxGain: 800
+    lambda: 10.4
+    ratio: 0.5
+  - numberOfObjectsRequired: 5000
+    minGain: 100
+    maxGain: 10000
+    lambda: 10.4
+    ratio: 0.5
+  - numberOfObjectsRequired: 10000
+    minGain: 100
+    maxGain: 15000
+    lambda: 10.4
+    ratio: 0.5
   numberOfObjects: 0
   minDistanceToMove: 0.0002
-  minGain: 100
   maxGain: 800
+  minGain: 100
   distanceForMaxGain: 1
-  lambda: 10.4
-  ratio: 0.5
   rightHand: 1
   joystickOrthoDistCoef: 0.05
   resetStartingPosInteraction: {fileID: -2056001751301574692, guid: c348712bda248c246b8c49b3db54643f, type: 3}
@@ -4980,14 +5003,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88be36234be622344ac322a7859205d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters: []
+  parameters:
+  - numberOfObjectsRequired: 200
+    minGain: 100
+    maxGain: 800
+    lambda: 10.4
+    ratio: 0.5
+  - numberOfObjectsRequired: 5000
+    minGain: 100
+    maxGain: 10000
+    lambda: 10.4
+    ratio: 0.5
+  - numberOfObjectsRequired: 10000
+    minGain: 100
+    maxGain: 15000
+    lambda: 10.4
+    ratio: 0.5
   numberOfObjects: 0
   minDistanceToMove: 0.001
-  minGain: 100
   maxGain: 800
+  minGain: 100
   distanceForMaxGain: 0.1
-  lambda: 10
-  ratio: 0.5
   timeIncreaseCoef: 0.002
   rightHand: 1
   resetStartingPosInteraction: {fileID: -2056001751301574692, guid: c348712bda248c246b8c49b3db54643f, type: 3}
@@ -5008,19 +5044,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3150cf991ee6fa943bce4845bec5efed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters: []
+  parameters:
+  - numberOfObjectsRequired: 200
+    minGain: 100
+    maxGain: 800
+    lambda: 10.4
+    ratio: 0.5
+  - numberOfObjectsRequired: 5000
+    minGain: 100
+    maxGain: 10000
+    lambda: 10.4
+    ratio: 0.5
+  - numberOfObjectsRequired: 10000
+    minGain: 100
+    maxGain: 15000
+    lambda: 10.4
+    ratio: 0.5
   numberOfObjects: 0
   minDistanceToMove: 0.001
-  minGain: 100
   maxGain: 800
+  minGain: 100
   distanceForMaxGain: 1
-  lambda: 10
-  ratio: 0.5
   timeIncreaseCoef: 0.002
   joystickOrthoDistCoef: 0.05
   rightHand: 1
   rightJoyStickPos: {fileID: -1364706081689443592, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   leftJoyStickPos: {fileID: 4627309703540579831, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  joystickXDeadZone: 0.1
+  joystickYDeadZoneActivation: 0.1
 --- !u!1 &1485604261
 GameObject:
   m_ObjectHideFlags: 0

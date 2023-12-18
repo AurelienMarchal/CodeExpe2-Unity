@@ -14,6 +14,7 @@ public class FullLogger
         "task;" + 
         "trial_number;" + 
         "is_training;" + 
+        "number_of_object;" +
         "current_phase;" + 
         "start_pos;" + 
         "current_pos;" + 
@@ -135,6 +136,7 @@ public class FullLogger
         string task,
         int trial_number,
         bool is_training,
+        int number_of_object,
         string current_phase,
         int current_pos,
         int start_pos,
@@ -199,6 +201,7 @@ public class FullLogger
             $"{task};" + 
             $"{trial_number};" + 
             $"{is_training};" + 
+            $"{number_of_object};" +
             $"{current_phase};" + 
             $"{start_pos};" + 
             $"{current_pos};" + 

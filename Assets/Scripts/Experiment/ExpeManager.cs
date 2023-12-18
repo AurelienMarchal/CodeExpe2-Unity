@@ -5,6 +5,23 @@ using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 using TMPro;
 using UnityEngine.UI;
 
+[Serializable]
+public struct LocateTaskParameter{
+
+    [SerializeField]
+    public int numberOfObjectsRequired;
+
+    [SerializeField]
+    public int[] distances;
+
+    public LocateTaskParameter(int numberOfObjectsRequired, int[] distances){
+        this.numberOfObjectsRequired = numberOfObjectsRequired;
+        this.distances = distances;
+    }
+}
+
+
+
 public class ExpeManager : MonoBehaviour
 {
 
@@ -110,8 +127,10 @@ public class ExpeManager : MonoBehaviour
     float? controllerDistanceToValidatePattern4 = 0f;
     float? controllerDistanceToValidatePattern5 = 0f;
 
+    int[] distances;
+
     [SerializeField]
-    int[] distances = {44, 88};
+    LocateTaskParameter[] locateTaskParameters;
 
     List<int> distanceSequence = new List<int>();
 
@@ -869,6 +888,18 @@ public class ExpeManager : MonoBehaviour
 
 
     void FillLocateSequence(){
+
+        var parameter = new LocateTaskParameter(int.MaxValue, new int[]{ 44, 88 });
+
+        foreach(LocateTaskParameter parameter_ in locateTaskParameters){
+            Debug.Log($"{parameter_.numberOfObjectsRequired} >= {currentBlock.numberOfObjects}");
+            if(parameter_.numberOfObjectsRequired >= currentBlock.numberOfObjects){
+                parameter = parameter_;
+                break;
+            }
+        }
+
+        distances = parameter.distances;
         
         distanceSequence.Clear();
         directionSequence.Clear();
@@ -882,6 +913,8 @@ public class ExpeManager : MonoBehaviour
     }
 
     void PickDistanceAndDirection(){
+
+
         if(distanceSequence.Count == 0 || directionSequence.Count == 0){
             FillLocateSequence();
         }
@@ -1100,6 +1133,7 @@ public class ExpeManager : MonoBehaviour
             currentBlock.task.ToString(),
             currentTrial.num,
             currentTrial.training,
+            currentBlock.numberOfObjects,
             startingPos,
             currentBlock.task == Task.Locate ? numberToLocate : null,
             currentBlock.task == Task.Locate ? currentDistance : null,
@@ -1183,6 +1217,7 @@ public class ExpeManager : MonoBehaviour
             currentBlock.task.ToString(),
             currentTrial.num,
             currentTrial.training,
+            currentBlock.numberOfObjects,
             expeState.ToString(),
             objectManager.t,
             startingPos,
